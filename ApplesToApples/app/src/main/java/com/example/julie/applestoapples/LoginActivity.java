@@ -45,11 +45,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private static final int REQUEST_READ_CONTACTS = 0;
 
     /**
-     * A dummy authentication store containing known user names and passwords.
+     * A dummy authentication store containing known user names and groups.
      * TODO: remove after connecting to a real authentication system.
      */
     private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
+            "vern:12345", "vern2:45678"
     };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -303,7 +303,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
             // TODO: register the new account here.
-            return true;
+            System.out.println("-------Calling HTTP Handler--------");
+            return Http_Handler.test(mEmail, mPassword);
         }
 
         @Override
