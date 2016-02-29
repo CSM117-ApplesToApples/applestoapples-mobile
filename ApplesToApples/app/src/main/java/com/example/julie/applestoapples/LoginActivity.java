@@ -308,7 +308,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             System.out.println("-------Calling HTTP Handler--------");
             Log.i("UserLoginTask", mEmail);
             Log.i("UserLoginTask", mPassword);
-            return Http_Handler.test(mEmail, mPassword);
+            return Http_Handler.joinGroup(mEmail, mPassword);
         }
 
         @Override
