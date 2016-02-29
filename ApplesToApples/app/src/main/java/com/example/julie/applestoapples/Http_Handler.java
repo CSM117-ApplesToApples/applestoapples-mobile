@@ -1,6 +1,11 @@
 package com.example.julie.applestoapples;
 
 
+import android.util.JsonReader;
+import android.util.Log;
+
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,16 +23,17 @@ public class Http_Handler {
     /**
      * This class will contain logic for all HTTP requests.
      */
+    static URL url = null;
+    static HttpURLConnection conn = null;
+    static InputStream in = null;
 
     static final public String host = "http://dev.mrerickruiz.com/ata/";
 
-    static public boolean test( String username, String groupID ) {
+    static public boolean joinGroup(LoginActivity.UserLoginTask activity, String username, String groupID ) {
         final String request = "player?name=" + username +
                 "&groupID=" + groupID;
         boolean ret = false;
-        URL url = null;
-        HttpURLConnection conn = null;
-        InputStream in = null;
+
 
         /**
          *  TODO: Throw the exception instead of try/catch?
@@ -57,6 +63,60 @@ public class Http_Handler {
             int responseCode = conn.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 in = new BufferedInputStream(conn.getInputStream());
+
+                JsonParser parser = new JsonParser();
+                //Log.i("JoinGroup", "Calling parser");
+                Player player = parser.readJsonStream(in);
+                //Log.i("JoinGroup", "PlayerID: " + player.mPlayerID);
+                //Log.i("JoinGroup", "Username: " + player.mUsername);
+                //Log.i("JoinGroup", "GroupID: " + player.mGroupID);
+                //Log.i("JoinGroup", "Score: " + player.mScore);
+                //for(int i = 0; i < player.mCards.size(); i++)
+                //    Log.i("JoinGroup", "Card: " + player.mCards.get(i).mID + ", " + player.mCards.get(i).mName);
+
+                /*
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                StringBuilder result = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    result.append(line);
+                }
+                Log.i("JoinGroup", result.toString());*/
+                activity.mLoginPlayer = player;
+                ret = true;
+            } else {
+                System.out.println("Bad response code, request failed");
+                ret = false;
+            }
+            conn.disconnect();
+        } catch (ProtocolException e1) {
+            e1.printStackTrace();
+        } catch (MalformedURLException e) {
+            // error_log( url creation failed )
+            e.printStackTrace();
+        } catch (IOException e) {
+            // error_log( connection open failed )
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
+    static public boolean createGroup(String username){
+        final String request = "player?name=" + username;
+        boolean ret = false;
+
+        try {
+            //Set up request and send it
+            url = new URL(host + request);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setReadTimeout(15000);
+            conn.setConnectTimeout(15000);
+
+            //Read the response
+            int responseCode = conn.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                in = new BufferedInputStream(conn.getInputStream());
                 BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 StringBuilder result = new StringBuilder();
                 String line;
@@ -79,7 +139,6 @@ public class Http_Handler {
             // error_log( connection open failed )
             e.printStackTrace();
         }
-
         return ret;
     }
 }
