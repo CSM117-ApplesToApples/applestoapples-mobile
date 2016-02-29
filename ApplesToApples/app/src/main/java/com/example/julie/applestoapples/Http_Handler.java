@@ -18,6 +18,9 @@ public class Http_Handler {
     /**
      * This class will contain logic for all HTTP requests.
      */
+    static URL url = null;
+    static HttpURLConnection conn = null;
+    static InputStream in = null;
 
     static final public String host = "http://dev.mrerickruiz.com/ata/";
 
@@ -25,9 +28,7 @@ public class Http_Handler {
         final String request = "player?name=" + username +
                 "&groupID=" + groupID;
         boolean ret = false;
-        URL url = null;
-        HttpURLConnection conn = null;
-        InputStream in = null;
+
 
         /**
          *  TODO: Throw the exception instead of try/catch?
@@ -80,6 +81,46 @@ public class Http_Handler {
             e.printStackTrace();
         }
 
+        return ret;
+    }
+
+    static public boolean createGroup(String username){
+        final String request = "player?name=" + username;
+        boolean ret = false;
+
+        try {
+            //Set up request and send it
+            url = new URL(host + request);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setReadTimeout(15000);
+            conn.setConnectTimeout(15000);
+
+            //Read the response
+            int responseCode = conn.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                in = new BufferedInputStream(conn.getInputStream());
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                StringBuilder result = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    result.append(line);
+                }
+                System.out.println(result.toString());
+                ret = true;
+            } else {
+                System.out.println("Bad response code, request failed");
+                ret = false;
+            }
+            conn.disconnect();
+        } catch (ProtocolException e1) {
+            e1.printStackTrace();
+        } catch (MalformedURLException e) {
+            // error_log( url creation failed )
+            e.printStackTrace();
+        } catch (IOException e) {
+            // error_log( connection open failed )
+            e.printStackTrace();
+        }
         return ret;
     }
 }
