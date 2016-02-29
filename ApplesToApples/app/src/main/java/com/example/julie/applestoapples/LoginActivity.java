@@ -31,6 +31,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.json.JSONObject;
+
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -291,6 +294,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String mEmail;
         private final String mPassword;
+        Player mLoginPlayer;
 
         UserLoginTask(String email, String password) {
             mEmail = email;
@@ -308,7 +312,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             System.out.println("-------Calling HTTP Handler--------");
             Log.i("UserLoginTask", mEmail);
             Log.i("UserLoginTask", mPassword);
-            return Http_Handler.joinGroup(mEmail, mPassword);
+            return Http_Handler.joinGroup(this, mEmail, mPassword);
         }
 
         @Override
@@ -319,8 +323,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if (success) {
                 //finish();
                 Intent main = new Intent(getApplicationContext(), MainActivity.class);
-                main.putExtra("username", mEmail);
+                //main.putExtra("username", mEmail);
                 main.putExtra("groupID", mPassword);
+                main.putExtra("player", mLoginPlayer);
                 startActivity(main);
             } else {
                 mGroupIdView.setError(getString(R.string.error_incorrect_password));

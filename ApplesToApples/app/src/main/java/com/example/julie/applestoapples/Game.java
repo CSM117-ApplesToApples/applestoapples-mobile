@@ -10,13 +10,16 @@ import java.util.ArrayList;
 public class Game {
     Boolean mIfJudge;
     Player mPlayer;
-    String mGroupID;
 
-    public Game(String username, String groupID){
+    public Game(Player player){
         Log.i("Game", "New Game");
-        this.mPlayer = new Player(username);
-        this.mGroupID = groupID;
+        this.mPlayer = player;
         Log.i("Game", "player:" + mPlayer.mUsername);
-        Log.i("Game", "groupID:" + this.mGroupID);
+        Log.i("Game", "PlayerID: " + player.mPlayerID);
+        Log.i("Game", "Username: " + player.mUsername);
+        Log.i("Game", "GroupID: " + player.mGroupID);
+        Log.i("Game", "Score: " + player.mScore);
+        for(int i = 0; i < player.mCards.size(); i++)
+            Log.i("Game", "Card: " + player.mCards.get(i).mID + ", " + player.mCards.get(i).mName);
     }
 }

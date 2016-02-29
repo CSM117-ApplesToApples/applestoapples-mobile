@@ -30,10 +30,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Intent main = getIntent();
-        String username = main.getStringExtra("username");
+        Player player = main.getExtras().getParcelable("player");
         String groupID = main.getStringExtra("groupID");
 
-        this.mGame = new Game(username, groupID);
+        this.mGame = new Game(player);
     }
 
     @Override
