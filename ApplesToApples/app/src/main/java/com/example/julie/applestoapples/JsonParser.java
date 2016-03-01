@@ -15,7 +15,23 @@ import java.util.List;
  */
 public class JsonParser {
 
-    public Player readJsonStream(InputStream in) throws IOException {
+    public boolean readSuccess(InputStream in) throws IOException {
+        JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+
+        try {
+            reader.beginObject();
+            if(reader.hasNext()){
+                if(reader.nextName().equals("success"))
+                    return reader.nextBoolean();
+                return false;
+            }
+        }finally {
+            reader.close();
+        }
+        return false;
+    }
+
+    public Player readPlayerInfo(InputStream in) throws IOException {
         JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
         try {
             Log.i("JsonParser", "readJsonStream");

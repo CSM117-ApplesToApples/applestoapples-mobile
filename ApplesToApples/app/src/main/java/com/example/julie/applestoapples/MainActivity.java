@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         this.mGame = new Game(player);
 
         GridView grid = (GridView) findViewById(R.id.gridView);
-        grid.setAdapter(new ButtonAdapter(player.mCards, this));
+        grid.setAdapter(new ButtonAdapter(mGame.mPlayer.mCards, this));
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
