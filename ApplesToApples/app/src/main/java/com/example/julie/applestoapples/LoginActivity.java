@@ -44,10 +44,10 @@ import static android.Manifest.permission.READ_CONTACTS;
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
+
     private static final int REQUEST_READ_CONTACTS = 0;
+    private static final int CREATE_GAME = 0;
+    private static final int JOIN_GAME = 1;
 
     /**
      * A dummy authentication store containing known user names and groups.
@@ -87,8 +87,24 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
+        Button mCreateGameButton = (Button) findViewById(R.id.create_game_button);
+        mCreateGameButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getLogin(CREATE_GAME);
+            }
+        });
+
         Button mJoinGameButton = (Button) findViewById(R.id.join_game_button);
         mJoinGameButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getLogin(JOIN_GAME);
+            }
+        });
+
+        Button mBeginGameButton = (Button) findViewById(R.id.begin_game_button);
+        mBeginGameButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
@@ -140,6 +156,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 populateAutoComplete();
             }
         }
+    }
+
+
+    /**
+     * When "join game" or "create game" buttons are pushed, displays field to enter name
+     * (and game ID - only when joining an existing game), in addition to "begin game" button.
+     */
+    private void getLogin(int type) {
+        findViewById(R.id.join_game_button).setVisibility(View.GONE);
+        findViewById(R.id.create_game_button).setVisibility(View.GONE);
+        mNameView.setVisibility(View.VISIBLE);
+        if (type == JOIN_GAME)
+            mGroupIdView.setVisibility(View.VISIBLE);
+        findViewById(R.id.begin_game_button).setVisibility(View.VISIBLE);
     }
 
 

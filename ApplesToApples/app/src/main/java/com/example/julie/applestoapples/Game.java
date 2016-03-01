@@ -5,7 +5,7 @@ import android.util.Log;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-
+import java.util.List;
 /**
  * Created by Evannnnn on 2/28/16.
  */
@@ -17,10 +17,18 @@ public class Game {
     String greenCard;
     String winner;
     String winningCard;
+    List<Card> SubmittedCards;
 
 
     public Game(Player player){
+        this.winner = "";
+        this.winningCard = "";
+        this.judgeName = "";
+        this.greenCard = "";
+        this.mIfJudge = false;
+        this.GameInProgress = true;
         this.mPlayer = player;
+        this.SubmittedCards = null;
         Log.i("Game", "player:" + mPlayer.mUsername);
         Log.i("Game", "PlayerID: " + player.mPlayerID);
         Log.i("Game", "Username: " + player.mUsername);
@@ -33,11 +41,11 @@ public class Game {
     //TODO update player's cards
     public void updateGame(JSONObject response){
     try {
+        greenCard = response.getString("GreenCard");
         if (response.getBoolean("status")) {
             //Game is in progress
             GameInProgress = true;
-            greenCard = response.getString("GreenCard");
-            if (response.getBoolean("judge?")) {
+           if (response.getBoolean("judge?")) {
                 mIfJudge = true;
 
             } else {
@@ -50,6 +58,7 @@ public class Game {
             winner = response.getString("Winner");
             winningCard = response.getString("WinningCard");
         }
+
     }catch(Exception e){
         e.printStackTrace();
     }
