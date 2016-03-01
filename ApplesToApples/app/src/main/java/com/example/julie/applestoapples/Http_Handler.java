@@ -26,6 +26,7 @@ public class Http_Handler {
     static URL url = null;
     static HttpURLConnection conn = null;
     static InputStream in = null;
+    static JsonParser parser = new JsonParser();
 
     static final public String host = "http://dev.mrerickruiz.com/ata/";
 
@@ -64,9 +65,9 @@ public class Http_Handler {
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 in = new BufferedInputStream(conn.getInputStream());
 
-                JsonParser parser = new JsonParser();
+
                 //Log.i("JoinGroup", "Calling parser");
-                Player player = parser.readJsonStream(in);
+                Player player = parser.readPlayerInfo(in);
                 //Log.i("JoinGroup", "PlayerID: " + player.mPlayerID);
                 //Log.i("JoinGroup", "Username: " + player.mUsername);
                 //Log.i("JoinGroup", "GroupID: " + player.mGroupID);
@@ -117,13 +118,7 @@ public class Http_Handler {
             int responseCode = conn.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 in = new BufferedInputStream(conn.getInputStream());
-                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                StringBuilder result = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    result.append(line);
-                }
-                System.out.println(result.toString());
+
                 ret = true;
             } else {
                 System.out.println("Bad response code, request failed");
@@ -141,4 +136,77 @@ public class Http_Handler {
         }
         return ret;
     }
+
+    static public boolean submitCard(Player player, String cardText){
+        final String request = "submit?groupID="+player.mGroupID+"&playerID="+player.mPlayerID
+                +"&cardText="+cardText;
+        boolean ret = false;
+
+        try {
+            //Set up request and send it
+            url = new URL(host + request);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setReadTimeout(15000);
+            conn.setConnectTimeout(15000);
+
+            //Read the response
+            int responseCode = conn.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                in = new BufferedInputStream(conn.getInputStream());
+
+                ret = parser.readSuccess(in);
+            } else {
+                System.out.println("Bad response code, request failed");
+                ret = false;
+            }
+            conn.disconnect();
+        } catch (ProtocolException e1) {
+            e1.printStackTrace();
+        } catch (MalformedURLException e) {
+            // error_log( url creation failed )
+            e.printStackTrace();
+        } catch (IOException e) {
+            // error_log( connection open failed )
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
+    static public boolean selectCard(Player player, String cardText){
+        final String request = "select?groupID="+player.mGroupID+"&playerID="+player.mPlayerID
+                +"&cardText="+cardText;
+        boolean ret = false;
+
+        try {
+            //Set up request and send it
+            url = new URL(host + request);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setReadTimeout(15000);
+            conn.setConnectTimeout(15000);
+
+            //Read the response
+            int responseCode = conn.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                in = new BufferedInputStream(conn.getInputStream());
+
+                ret = parser.readSuccess(in);
+            } else {
+                System.out.println("Bad response code, request failed");
+                ret = false;
+            }
+            conn.disconnect();
+        } catch (ProtocolException e1) {
+            e1.printStackTrace();
+        } catch (MalformedURLException e) {
+            // error_log( url creation failed )
+            e.printStackTrace();
+        } catch (IOException e) {
+            // error_log( connection open failed )
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
 }
