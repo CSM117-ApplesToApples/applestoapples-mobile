@@ -1,6 +1,8 @@
 package com.example.julie.applestoapples;
+import java.util.List;
 
 import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,6 +11,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     Game mGame = null;
@@ -28,12 +36,20 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-
         Intent main = getIntent();
         Player player = main.getExtras().getParcelable("player");
         String groupID = main.getStringExtra("groupID");
 
         this.mGame = new Game(player);
+
+        GridView grid = (GridView) findViewById(R.id.gridView);
+        grid.setAdapter(new ButtonAdapter(player.mCards, this));
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(MainActivity.this, position, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -58,3 +74,5 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 }
+
+
