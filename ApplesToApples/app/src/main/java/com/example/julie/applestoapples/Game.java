@@ -2,6 +2,8 @@ package com.example.julie.applestoapples;
 
 import android.util.Log;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 /**
@@ -9,10 +11,15 @@ import java.util.ArrayList;
  */
 public class Game {
     Boolean mIfJudge;
+    Boolean GameInProgress;
     Player mPlayer;
+    String judgeName;
+    String greenCard;
+    String winner;
+    String winningCard;
+
 
     public Game(Player player){
-        Log.i("Game", "New Game");
         this.mPlayer = player;
         Log.i("Game", "player:" + mPlayer.mUsername);
         Log.i("Game", "PlayerID: " + player.mPlayerID);
@@ -21,5 +28,31 @@ public class Game {
         Log.i("Game", "Score: " + player.mScore);
         for(int i = 0; i < player.mCards.size(); i++)
             Log.i("Game", "Card: " + player.mCards.get(i).mID + ", " + player.mCards.get(i).mName);
+    }
+
+    //TODO update player's cards
+    public void updateGame(JSONObject response){
+    try {
+        if (response.getBoolean("status")) {
+            //Game is in progress
+            GameInProgress = true;
+            greenCard = response.getString("GreenCard");
+            if (response.getBoolean("judge?")) {
+                mIfJudge = true;
+
+            } else {
+                mIfJudge = false;
+                judgeName = response.getString("CurrentJudgeName");
+            }
+        } else {
+            //Round has ended
+            GameInProgress = false;
+            winner = response.getString("Winner");
+            winningCard = response.getString("WinningCard");
+        }
+    }catch(Exception e){
+        e.printStackTrace();
+    }
+        return;
     }
 }

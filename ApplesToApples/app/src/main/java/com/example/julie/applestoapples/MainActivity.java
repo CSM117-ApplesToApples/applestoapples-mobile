@@ -16,10 +16,16 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONObject;
+
+import java.util.Timer;
 
 public class MainActivity extends AppCompatActivity {
     Game mGame = null;
+    Timer t;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +47,11 @@ public class MainActivity extends AppCompatActivity {
         String groupID = main.getStringExtra("groupID");
 
         this.mGame = new Game(player);
+        JSONObject gameStatus = HttpClient.sendRequest();
+        this.mGame.updateGame(gameStatus);
+
+        TextView judgeView = (TextView) findViewById(R.id.viewJudge);
+        judgeView.setText("The judge is ...");
 
         GridView grid = (GridView) findViewById(R.id.gridView);
         grid.setAdapter(new ButtonAdapter(player.mCards, this));
@@ -50,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, position, Toast.LENGTH_SHORT).show();
             }
         });
+
+
+
     }
 
     @Override
