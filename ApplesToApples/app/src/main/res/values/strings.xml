@@ -5,9 +5,11 @@
 
     <!-- Strings related to login -->
     <string name="prompt_name">Name</string>
-    <string name="prompt_groupId">GroupId</string>
-    <string name="action_sign_in">Join Game</string>
-    <string name="action_sign_in_short">Sign in</string>
+    <string name="prompt_groupId">Game ID</string>
+    <string name="action_join">Join a game</string>
+    <string name="action_create">Create a game</string>
+    <string name="action_begin">Begin Game</string>
+    <string name="action_get_id">Get game ID</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_groupId">This is not a valid Group.</string>
     <string name="error_incorrect_password">This password is incorrect</string>
@@ -15,4 +17,6 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="title_activity_results">ResultsActivity</string>
+    <string name="game_id">1234</string>
 </resources>

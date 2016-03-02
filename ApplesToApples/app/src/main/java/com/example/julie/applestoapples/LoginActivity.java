@@ -44,10 +44,10 @@ import static android.Manifest.permission.READ_CONTACTS;
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
+
     private static final int REQUEST_READ_CONTACTS = 0;
+    private static final int CREATE_GAME = 0;
+    private static final int JOIN_GAME = 1;
 
     /**
      * A dummy authentication store containing known user names and groups.
@@ -66,6 +66,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mGroupIdView;
     private View mProgressView;
     private View mLoginFormView;
+    private TextView mBackView;
+    private View mGameIdPromptView;
+    private TextView mGameIdValueView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,16 +91,52 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
+        Button mCreateGameButton = (Button) findViewById(R.id.create_game_button);
+        mCreateGameButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getLogin(CREATE_GAME);
+            }
+        });
+
         Button mJoinGameButton = (Button) findViewById(R.id.join_game_button);
         mJoinGameButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getLogin(JOIN_GAME);
+            }
+        });
+
+        Button mBeginGameButton = (Button) findViewById(R.id.begin_game_button);
+        mBeginGameButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
             }
         });
 
+        Button mGetGameIdButton = (Button) findViewById(R.id.get_game_id_button);
+        mGetGameIdButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getGameId();
+            }
+        });
+
+        mBackView = (TextView) findViewById(R.id.back_text);
+        mBackView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goBack();
+            }
+        });
+
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        mGameIdPromptView = findViewById(R.id.game_id_prompt);
+        mGameIdValueView = (TextView) findViewById(R.id.game_id_value);
+
+
     }
 
     private void populateAutoComplete() {
@@ -144,6 +184,53 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
     /**
+     * When "join game" or "create game" buttons are pushed, displays field to enter name
+     * (and game ID - only when joining an existing game), in addition to "begin game" button.
+     */
+    private void getLogin(int type) {
+        findViewById(R.id.join_game_button).setVisibility(View.GONE);
+        findViewById(R.id.create_game_button).setVisibility(View.GONE);
+        mBackView.setVisibility(View.VISIBLE);
+        mNameView.setVisibility(View.VISIBLE);
+        if (type == JOIN_GAME) {
+            mGroupIdView.setVisibility(View.VISIBLE);
+            findViewById(R.id.begin_game_button).setVisibility(View.VISIBLE);
+        }
+        else {
+            findViewById(R.id.get_game_id_button).setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void goBack() {
+        mBackView.setVisibility(View.GONE);
+        mNameView.setVisibility(View.GONE);
+        mGroupIdView.setVisibility(View.GONE);
+        findViewById(R.id.begin_game_button).setVisibility(View.GONE);
+        findViewById(R.id.get_game_id_button).setVisibility(View.GONE);
+        mGameIdPromptView.setVisibility(View.GONE);
+        mGameIdValueView.setVisibility(View.GONE);
+
+        findViewById(R.id.join_game_button).setVisibility(View.VISIBLE);
+        findViewById(R.id.create_game_button).setVisibility(View.VISIBLE);
+    }
+
+    public void getGameId() {
+        // hide/show appropriate sections
+        mNameView.setVisibility(View.GONE);
+        findViewById(R.id.get_game_id_button).setVisibility(View.GONE);
+        mGameIdPromptView.setVisibility(View.VISIBLE);
+        mGameIdValueView.setVisibility(View.VISIBLE);
+        findViewById(R.id.begin_game_button).setVisibility(View.VISIBLE);
+
+        // randomly select 4-digit game ID
+        int r = (int) (Math.random() * (9999 - 1000)) + 1000;
+        mGameIdValueView.setText(r);
+        mGroupIdView.setText(r);
+
+    }
+
+
+    /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
@@ -164,14 +251,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
+        // Check for a valid group ID, if the user entered one.
         if (!TextUtils.isEmpty(groupId) && !isGroupIdValid(groupId)) {
             mGroupIdView.setError(getString(R.string.error_invalid_groupId));
             focusView = mGroupIdView;
             cancel = true;
         }
 
-        // Check for a valid email address.
+        // Check for a valid name
         if (TextUtils.isEmpty(name)) {
             mNameView.setError(getString(R.string.error_field_required));
             focusView = mNameView;

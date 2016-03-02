@@ -1,6 +1,7 @@
 package com.example.julie.applestoapples;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -39,6 +40,7 @@ public class ButtonAdapter extends BaseAdapter {
         if (convertView == null) {
             button = new Button(mContext);
             button.setLayoutParams(new GridView.LayoutParams(600,100));
+            button.setBackgroundColor(Color.parseColor("#FF6666"));
             button.setPadding(5, 2, 5, 2);
         }else{
             button = (Button) convertView;
