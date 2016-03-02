@@ -1,10 +1,13 @@
+*.ap_
+*.apk
 
-ApplesToApples/.idea/gradle.xml
+*.dex
 
-ApplesToApples/.idea/misc.xml
+*.class
 
-ApplesToApples/app/app.iml
+bin/
+gen/
 
-*.xml
+local.properties
 
-*.iml
+
