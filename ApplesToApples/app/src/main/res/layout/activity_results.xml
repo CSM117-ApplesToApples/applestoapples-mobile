@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:fitsSystemWindows="true"
+    tools:context="com.example.julie.applestoapples.ResultsActivity">
+
+
+    <include layout="@layout/content_results" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorGreen">
+
+        <TextView
+            android:id="@+id/groupIdView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:textSize="20sp"
+            android:paddingBottom="20dp"/>
+
+        <TextView
+            android:id="@+id/banner_winner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="bottom"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:textSize="32sp"
+            android:paddingBottom="8dp"/>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:paddingBottom="10dp">
+
+            <ImageView
+                android:id="@+id/appleMainImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/greenapple"/>
+
+            <TextView
+                android:id="@+id/greenCard"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:gravity="center"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="32sp"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/redCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:textSize="32sp"
+            android:background="@color/colorRed"/>
+
+        <Button android:id="@+id/new_game_button"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" android:text="Enter New Round"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:background="@color/colorSharpRed"
+            android:onClick="setNewGame"
+            android:layout_gravity="center"
+            />
+
+    </LinearLayout>
+
+
+
+</android.support.design.widget.CoordinatorLayout>
