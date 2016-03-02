@@ -3,7 +3,10 @@ package com.example.julie.applestoapples;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONObject;
+
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Evannnnn on 2/28/16.
@@ -59,5 +62,35 @@ public class Player implements Parcelable{
         dest.writeString(mGroupID);
         dest.writeInt(mScore);
         dest.writeTypedList(mCards);
+    }
+
+    public boolean submitCard(Card card){
+        final String request = "submit?groupID="+mGroupID+"&playerID="+mPlayerID
+                +"&cardText="+card.mName;
+        boolean ret = false;
+        try {
+            JSONObject resp = new HttpThread().execute(request).get(10, TimeUnit.SECONDS);
+            JsonParser parser = new JsonParser();
+            ret = parser.readSuccess(resp);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
+    public boolean selectCard(Card card){
+        final String request = "select?groupID="+mGroupID+"&playerID="+mPlayerID
+                +"&cardText="+card.mName;
+        boolean ret = false;
+        try {
+            JSONObject resp = new HttpThread().execute(request).get(10, TimeUnit.SECONDS);
+            JsonParser parser = new JsonParser();
+            ret = parser.readSuccess(resp);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return ret;
     }
 }

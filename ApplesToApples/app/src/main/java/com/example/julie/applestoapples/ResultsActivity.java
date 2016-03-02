@@ -12,7 +12,7 @@ import org.w3c.dom.Text;
 import java.util.concurrent.TimeUnit;
 
 public class ResultsActivity extends AppCompatActivity {
-
+    /*
     String groupId = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,5 +51,5 @@ public class ResultsActivity extends AppCompatActivity {
 
         finish();
         return;
-    }
+    }*/
 }

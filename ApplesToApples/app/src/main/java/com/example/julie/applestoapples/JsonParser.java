@@ -4,6 +4,8 @@ import android.util.JsonReader;
 import android.util.JsonToken;
 import android.util.Log;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,6 +16,17 @@ import java.util.List;
  * Created by Evannnnn on 2/28/16.
  */
 public class JsonParser {
+
+    public boolean readSuccess(JSONObject jsonObject) {
+        boolean ret = false;
+        try {
+            ret = jsonObject.getBoolean("success");
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        return ret;
+    }
 
     public boolean readSuccess(InputStream in) throws IOException {
         JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
