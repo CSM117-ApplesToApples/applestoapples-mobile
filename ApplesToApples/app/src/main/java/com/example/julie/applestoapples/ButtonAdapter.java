@@ -27,8 +27,8 @@ public class ButtonAdapter extends BaseAdapter {
     public int getCount(){
         return mCards.size();
     }
-    public Object getItem(int position){
-        return null;
+    public Card getItem(int position){
+        return mCards.get(position);
     }
 
     public long getItemId(int position){
