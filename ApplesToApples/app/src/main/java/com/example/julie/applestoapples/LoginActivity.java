@@ -226,7 +226,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         View focusView = null;
 
         // Check for a valid group ID, if the user entered one.
-        if (!TextUtils.isEmpty(groupId) && !isGroupIdValid(groupId)) {
+        if (TextUtils.isEmpty(groupId) && !isGroupIdValid(groupId)) {
             mGroupIdView.setError(getString(R.string.error_invalid_groupId));
             focusView = mGroupIdView;
             cancel = true;
