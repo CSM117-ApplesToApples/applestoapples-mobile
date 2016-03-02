@@ -115,7 +115,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-
         mBackView = (TextView) findViewById(R.id.back_text);
         mBackView.setOnClickListener(new OnClickListener() {
             @Override
@@ -126,7 +125,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-
 
     }
 
@@ -179,30 +177,28 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * (and game ID - only when joining an existing game), in addition to "begin game" button.
      */
     private void getLogin(int type) {
-        createOrJoin = type;
-        findViewById(R.id.join_game_button).setVisibility(View.GONE);
+      createOrJoin = type;
+       findViewById(R.id.join_game_button).setVisibility(View.GONE);
         findViewById(R.id.create_game_button).setVisibility(View.GONE);
         mBackView.setVisibility(View.VISIBLE);
         mNameView.setVisibility(View.VISIBLE);
-        if (type == JOIN_GAME)
+      if (type == JOIN_GAME)
             mGroupIdView.setVisibility(View.VISIBLE);
         findViewById(R.id.begin_game_button).setVisibility(View.VISIBLE);
-    }
+  }
 
     public void goBack() {
         mBackView.setVisibility(View.GONE);
         mNameView.setVisibility(View.GONE);
         mGroupIdView.setVisibility(View.GONE);
         findViewById(R.id.begin_game_button).setVisibility(View.GONE);
-        findViewById(R.id.join_game_button).setVisibility(View.VISIBLE);
+         findViewById(R.id.join_game_button).setVisibility(View.VISIBLE);
         findViewById(R.id.create_game_button).setVisibility(View.VISIBLE);
     }
 
-    public int getCreateOrJoin() {
+   public int getCreateOrJoin() {
         return createOrJoin;
     }
-
-
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -226,7 +222,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         View focusView = null;
 
         // Check for a valid group ID, if the user entered one.
-        if (TextUtils.isEmpty(groupId) && !isGroupIdValid(groupId)) {
+       if (TextUtils.isEmpty(groupId) && !isGroupIdValid(groupId)) {
             mGroupIdView.setError(getString(R.string.error_invalid_groupId));
             focusView = mGroupIdView;
             cancel = true;
