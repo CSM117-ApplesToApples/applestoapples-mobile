@@ -48,9 +48,13 @@ public class Game {
            if (response.getBoolean("judge?")) {
                 mIfJudge = true;
 
+               //TODO get SubmittedCards
             } else {
                 mIfJudge = false;
                 judgeName = response.getString("CurrentJudgeName");
+
+               //TODO player.mCards
+
             }
         } else {
             //Round has ended

@@ -24,12 +24,15 @@ import org.w3c.dom.Text;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
 
 public class MainActivity extends AppCompatActivity {
     Game mGame = null;
-    Timer t;
+    Player player = null;
     private String groupId;
     private int playerId;
+    private Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,54 +41,48 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         Intent main = getIntent();
-        Player player = main.getExtras().getParcelable("player");
+        player = main.getExtras().getParcelable("player");
         groupId = player.mGroupID;
         playerId = player.mPlayerID;
         this.mGame = new Game(player);
 
-        JSONObject gameStatus = getGame();
-        this.mGame.updateGame(gameStatus);
+        TextView groupView = (TextView) findViewById(R.id.groupView);
+        groupView.setText("GroupId: " + groupId);
 
-        TextView scoreView = (TextView) findViewById(R.id.scoreView);
-        scoreView.setText("Score: " + player.mScore);
-
-        if(this.mGame.GameInProgress ) {
-            GridView grid = (GridView) findViewById(R.id.gridView);
-
-            if (this.mGame.mIfJudge) {
-                //TODO display submitted cards
-
-
-
-            } else {
-                grid.setVisibility(View.VISIBLE);
-                grid.setAdapter(new ButtonAdapter(player.mCards, this));
-                grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Toast.makeText(MainActivity.this, position, Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        }
+        //Update and get Game attributes to display
+        getGame();
 
        if(this.mGame.GameInProgress)
         {
             displayCurrentGame();
+
         }
         else{
-            displayGameResults();
+            Intent resultsPage = new Intent(this, ResultsActivity.class );
+            resultsPage.putExtra("groupID", groupId);
+            resultsPage.putExtra("winner", this.mGame.winner);
+            resultsPage.putExtra("redCard", this.mGame.winningCard);
+            resultsPage.putExtra("greenCard", this.mGame.greenCard);
+            startActivity(resultsPage);
         }
 
+    //TODO should only set timer after the player has submit a card
+        //or if it is the judge, set timer until to check if all players have submitted a card.
+        timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                boolean gameStatus = MainActivity.this.mGame.GameInProgress;
+                MainActivity.this.getGame();
+                if (gameStatus != MainActivity.this.mGame.GameInProgress) {
+                    timer.purge();
+                    MainActivity.this.finish();
+                    MainActivity.this.startActivity(getIntent());
+                }
+            }
+        };
+        timer.scheduleAtFixedRate(task, 0, 100000);
     }
 
     @Override
@@ -110,42 +107,63 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onRestart(){
+        super.onRestart();
+        getGame();
+        displayCurrentGame();
+    }
+
     public void displayCurrentGame(){
+
+        TextView scoreView = (TextView) findViewById(R.id.scoreView);
+        scoreView.setText("Score: " + player.mScore);
+
         TextView currentGreenCard = (TextView) findViewById(R.id.greenCard);
         currentGreenCard.setText(this.mGame.greenCard);
-        ImageView apple = (ImageView) findViewById(R.id.appleMainImage);
-        apple.setImageResource(getResources().getIdentifier("greenapple", "drawable", getPackageName()));
         TextView banner = (TextView) findViewById(R.id.banner);
-        if(this.mGame.mIfJudge)
-            banner.setText("You are the judge.");
-        else {
-            TextView judge = (TextView) findViewById(R.id.judgeView);
-            judge.setText("The judge is " + this.mGame.judgeName);
-        }
-    }
-    public void displayGameResults(){
-        TextView banner = (TextView) findViewById(R.id.banner);
-        TextView results = (TextView) findViewById(R.id.greenCard);
-        ImageView apple = (ImageView) findViewById(R.id.appleMainImage);
-        apple.setImageResource(getResources().getIdentifier("greenapple", "drawable", getPackageName()));
-        banner.setText("The Winner of this Round is " + this.mGame.winner + ".");
-        results.setText(this.mGame.greenCard + " + " + this.mGame.winningCard );
+        GridView grid = (GridView) findViewById(R.id.gridView);
+
+            if (this.mGame.mIfJudge) {
+                banner.setText("You are the judge.");
+                grid.setVisibility(View.GONE);
+                //TODO display submitted cards
+
+
+            } else {
+                TextView judge = (TextView) findViewById(R.id.judgeView);
+                judge.setText("The judge is " + this.mGame.judgeName);
+
+                grid.setVisibility(View.VISIBLE);
+                grid.setAdapter(new ButtonAdapter(player.mCards, this));
+                grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Toast.makeText(MainActivity.this, position, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }
     }
 
-    public JSONObject getGame(){
-        JSONObject ret = null;
+
+    public void getGame(){
 
         if(groupId == null | groupId == "")
-            return ret;
+            return;
+
+        JSONObject resp = null;
         String url = "http://dev.mrerickruiz.com/ata/" +
                 "game?groupID=" + groupId +
                 "&playerID=" + playerId;
         try{
-            ret =  new HttpThread().execute(url).get(10, TimeUnit.SECONDS);
+            resp =  new HttpThread().execute(url).get(10, TimeUnit.SECONDS);
         }catch(Exception e){
             e.printStackTrace();
         }
-        return ret;
+
+        this.mGame.updateGame(resp);
+        return;
     }
 }
 
