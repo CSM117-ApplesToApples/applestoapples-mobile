@@ -67,8 +67,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
     private TextView mBackView;
-    private View mGameIdPromptView;
-    private TextView mGameIdValueView;
+
+    private int createOrJoin;
 
 
     @Override
@@ -115,13 +115,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mGetGameIdButton = (Button) findViewById(R.id.get_game_id_button);
-        mGetGameIdButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getGameId();
-            }
-        });
 
         mBackView = (TextView) findViewById(R.id.back_text);
         mBackView.setOnClickListener(new OnClickListener() {
@@ -133,8 +126,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-        mGameIdPromptView = findViewById(R.id.game_id_prompt);
-        mGameIdValueView = (TextView) findViewById(R.id.game_id_value);
 
 
     }
@@ -188,17 +179,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * (and game ID - only when joining an existing game), in addition to "begin game" button.
      */
     private void getLogin(int type) {
+        createOrJoin = type;
         findViewById(R.id.join_game_button).setVisibility(View.GONE);
         findViewById(R.id.create_game_button).setVisibility(View.GONE);
         mBackView.setVisibility(View.VISIBLE);
         mNameView.setVisibility(View.VISIBLE);
-        if (type == JOIN_GAME) {
+        if (type == JOIN_GAME)
             mGroupIdView.setVisibility(View.VISIBLE);
-            findViewById(R.id.begin_game_button).setVisibility(View.VISIBLE);
-        }
-        else {
-            findViewById(R.id.get_game_id_button).setVisibility(View.VISIBLE);
-        }
+        findViewById(R.id.begin_game_button).setVisibility(View.VISIBLE);
     }
 
     public void goBack() {
@@ -206,28 +194,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mNameView.setVisibility(View.GONE);
         mGroupIdView.setVisibility(View.GONE);
         findViewById(R.id.begin_game_button).setVisibility(View.GONE);
-        findViewById(R.id.get_game_id_button).setVisibility(View.GONE);
-        mGameIdPromptView.setVisibility(View.GONE);
-        mGameIdValueView.setVisibility(View.GONE);
-
         findViewById(R.id.join_game_button).setVisibility(View.VISIBLE);
         findViewById(R.id.create_game_button).setVisibility(View.VISIBLE);
     }
 
-    public void getGameId() {
-        // hide/show appropriate sections
-        mNameView.setVisibility(View.GONE);
-        findViewById(R.id.get_game_id_button).setVisibility(View.GONE);
-        mGameIdPromptView.setVisibility(View.VISIBLE);
-        mGameIdValueView.setVisibility(View.VISIBLE);
-        findViewById(R.id.begin_game_button).setVisibility(View.VISIBLE);
-
-        // randomly select 4-digit game ID
-        int r = (int) (Math.random() * (9999 - 1000)) + 1000;
-        mGameIdValueView.setText(r);
-        mGroupIdView.setText(r);
-
+    public int getCreateOrJoin() {
+        return createOrJoin;
     }
+
 
 
     /**
@@ -273,7 +247,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(name, groupId);
+            mAuthTask = new UserLoginTask(name, groupId, createOrJoin);
             mAuthTask.execute((Void) null);
         }
     }
@@ -379,13 +353,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
-        private final String mPassword;
+        private final String mName;
+        private final String mGroupId;
+        private final int mGameType;
         Player mLoginPlayer;
 
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
+        UserLoginTask(String name, String groupId, int createOrJoin) {
+            mName = name;
+            mGroupId = groupId;
+            mGameType = createOrJoin;
         }
 
         @Override
@@ -394,12 +370,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
 
-
             // TODO: register the new account here.
             System.out.println("-------Calling HTTP Handler--------");
-            Log.i("UserLoginTask", mEmail);
-            Log.i("UserLoginTask", mPassword);
-            return Http_Handler.joinGroup(this, mEmail, mPassword);
+            Log.i("UserLoginTask", mName);
+            Log.i("UserLoginTask", mGroupId);
+            if (mGameType == JOIN_GAME)
+                return Http_Handler.joinGroup(this, mName, mGroupId);
+            else
+                return Http_Handler.createGroup(mName);
         }
 
         @Override
@@ -411,11 +389,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 //finish();
                 Intent main = new Intent(getApplicationContext(), MainActivity.class);
                 //main.putExtra("username", mEmail);
-                main.putExtra("groupID", mPassword);
+                main.putExtra("groupID", mGroupId);
                 main.putExtra("player", mLoginPlayer);
                 startActivity(main);
             } else {
-                mGroupIdView.setError(getString(R.string.error_incorrect_password));
+                mGroupIdView.setError("Something went wrong when trying to sign in");
                 mGroupIdView.requestFocus();
             }
         }
