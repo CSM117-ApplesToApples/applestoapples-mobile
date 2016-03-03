@@ -36,9 +36,6 @@ public class Http_Handler {
         boolean ret = false;
 
 
-        /**
-         *  TODO: Throw the exception instead of try/catch?
-         *  Figure this out when we figure out error handling mechanism. */
         try {
             //Set up request and send it
             url = new URL(host + request);

@@ -49,30 +49,51 @@ public class MainActivity extends AppCompatActivity {
         TextView groupView = (TextView) findViewById(R.id.groupView);
         groupView.setText("GroupId: " + groupId);
 
+        TextView scoreView = (TextView) findViewById(R.id.scoreView);
+        scoreView.setText("Score: " + player.mScore);
+
         //Update and get Game attributes to display
         getGame();
 
-       if(this.mGame.GameInProgress)
-        {
-            displayCurrentGame();
-            if(this.mGame.mIfJudge){
+        if(this.mGame.GameInProgress) {
+
+            TextView currentGreenCard = (TextView) findViewById(R.id.greenCard);
+            currentGreenCard.setText(this.mGame.greenCard);
+            TextView banner = (TextView) findViewById(R.id.banner);
+            GridView grid = (GridView) findViewById(R.id.gridView);
+            if (this.mGame.mIfJudge == false) {
+                //PLAYER VIEW
+                TextView judge = (TextView) findViewById(R.id.judgeView);
+                judge.setText("The judge is " + this.mGame.judgeName);
+                grid.setVisibility(View.VISIBLE);
+                grid.setAdapter(new ButtonAdapter(this.player.mCards, this, player));
+                grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Toast.makeText(MainActivity.this, position, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            else{
+                //JUDGE VIEW
+                banner.setText("You are the judge.");
+                player.mCards = null;
+                grid.setVisibility(View.GONE);
 
                 timer = new Timer();
                 TimerTask task = new TimerTask() {
                     @Override
                     public void run() {
-                        boolean gameStatus = MainActivity.this.mGame.GameInProgress;
                         MainActivity.this.getGame();
-                        if (gameStatus != MainActivity.this.mGame.GameInProgress) {
+                        if (MainActivity.this.mGame.canSelect == true) {
                             timer.purge();
-                            MainActivity.this.finish();
-                            MainActivity.this.startActivity(getIntent());
+                            displaySelectedCards();
                         }
                     }
                 };
-                timer.scheduleAtFixedRate(task, 0, 100000);
+                timer.scheduleAtFixedRate(task, 0, 10000);
+             }
 
-            }
 
         }
         else{
@@ -82,9 +103,6 @@ public class MainActivity extends AppCompatActivity {
             resultsPage.putExtra("playerID", this.playerId);
             startActivity(resultsPage);
         }
-
-    //TODO should only set timer after the player has submit a card
-        //or if it is the judge, set timer until to check if all players have submitted a card.
 
     }
 
@@ -110,43 +128,23 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onRestart(){
-        super.onRestart();
-        getGame();
-        displayCurrentGame();
-    }
 
-    public void displayCurrentGame(){
 
-        TextView scoreView = (TextView) findViewById(R.id.scoreView);
-        scoreView.setText("Score: " + player.mScore);
-
-        TextView currentGreenCard = (TextView) findViewById(R.id.greenCard);
-        currentGreenCard.setText(this.mGame.greenCard);
-        TextView banner = (TextView) findViewById(R.id.banner);
+    public void displaySelectedCards(){
         GridView grid = (GridView) findViewById(R.id.gridView);
+        grid.setVisibility(View.VISIBLE);
 
-            if (this.mGame.mIfJudge) {
-                banner.setText("You are the judge.");
-                grid.setVisibility(View.GONE);
-                //TODO display submitted cards
-
-
-            } else {
-                TextView judge = (TextView) findViewById(R.id.judgeView);
-                judge.setText("The judge is " + this.mGame.judgeName);
-
-                grid.setVisibility(View.VISIBLE);
-                grid.setAdapter(new ButtonAdapter(this.player.mCards, this, player));
-                grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Toast.makeText(MainActivity.this, position, Toast.LENGTH_SHORT).show();
-                    }
-                });
-
+        //TODO SET SELECTED CARD TO JUDGE's mCards
+        //player.mCards =
+        grid.setAdapter(new ButtonAdapter(this.player.mCards, this, player));
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(MainActivity.this, position, Toast.LENGTH_SHORT).show();
             }
+        });
+
+
     }
 
 

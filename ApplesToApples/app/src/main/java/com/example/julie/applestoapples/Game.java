@@ -18,6 +18,7 @@ public class Game {
     String winner;
     String winningCard;
     List<Card> SubmittedCards;
+    Boolean canSelect;
 
 
     public Game(Player player){
@@ -29,6 +30,7 @@ public class Game {
         this.GameInProgress = true;
         this.mPlayer = player;
         this.SubmittedCards = null;
+        this.canSelect = false;
         Log.i("Game", "player:" + mPlayer.mUsername);
         Log.i("Game", "PlayerID: " + player.mPlayerID);
         Log.i("Game", "Username: " + player.mUsername);
@@ -47,13 +49,13 @@ public class Game {
             GameInProgress = true;
            if (response.getBoolean("judge?")) {
                 mIfJudge = true;
+                canSelect = response.getBoolean("canSelect");
 
-               //TODO get SubmittedCards
             } else {
                 mIfJudge = false;
                 judgeName = response.getString("CurrentJudgeName");
 
-               //TODO player.mCards
+               //TODO assign player.mCards for new round
 
             }
         } else {
