@@ -58,11 +58,12 @@ public class ButtonAdapter extends BaseAdapter {
 
 
                     } else {
-                        mplayer.submitCard(card.getText().toString());
+                       mplayer.submitCard(card.getText().toString());
 
                     }
 
                     Intent results = new Intent(mContext.getApplicationContext(), ResultsActivity.class);
+                    results.putExtra("submittedCard", card.getText());
                     results.putExtra("isJudge" , mplayer.isJudge);
                     results.putExtra("groupID", mplayer.mGroupID);
                     results.putExtra("playerID", mplayer.mPlayerID);

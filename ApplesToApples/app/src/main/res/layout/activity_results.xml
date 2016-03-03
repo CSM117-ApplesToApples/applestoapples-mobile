@@ -16,6 +16,90 @@
         android:background="@color/colorGreen">
 
 
+        <TextView
+            android:id="@+id/groupIdView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:textSize="20sp"
+            android:paddingBottom="20dp"/>
+
+
+
+        <TextView
+            android:id="@+id/banner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="bottom"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:textSize="32sp"
+            android:paddingBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/banner_winner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="bottom"
+            android:textColor="#FF0000"
+            android:textStyle="bold"
+            android:textSize="32sp"
+            android:paddingBottom="8dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:paddingBottom="10dp">
+
+            <ImageView
+                android:id="@+id/appleMainImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/greenapple"/>
+
+            <TextView
+                android:id="@+id/resultGreen"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:gravity="center"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="30sp"/>
+
+
+            <TextView
+                android:id="@+id/resultRed"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:gravity="center"
+                android:textColor="#FF0000"
+                android:textStyle="bold"
+                android:textSize="30sp"/>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/resultView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:textSize="30sp"/>
+
+
+        <Button android:id="@+id/new_game_button"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" android:text="Enter New Round"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:background="@color/colorSharpRed"
+            android:onClick="setNewGame"
+            android:layout_gravity="center"
+            android:visibility="invisible"
+            />
+
     </LinearLayout>
 
 
