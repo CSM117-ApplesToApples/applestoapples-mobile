@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     Game mGame = null;
+    Player player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,14 +41,14 @@ public class MainActivity extends AppCompatActivity {
         });*/
 
         final Intent main = getIntent();
-        Player player = main.getExtras().getParcelable("player");
+        player = main.getExtras().getParcelable("player");
 
         this.mGame = new Game(player);
+        this.player.isJudge = mGame.mIfJudge;
 
         final GridView grid = (GridView) findViewById(R.id.gridView);
-        grid.setAdapter(new ButtonAdapter(mGame.mPlayer.mCards, this));
+        grid.setAdapter(new ButtonAdapter(mGame.mPlayer.mCards, this, this.player));
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(MainActivity.this, position, Toast.LENGTH_SHORT).show();
                 Log.i("MA", "Click "+((Card) grid.getAdapter().getItem(position)).mName);

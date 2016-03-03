@@ -17,6 +17,7 @@ public class Player implements Parcelable{
     String mGroupID;
     int mScore;
     List<Card> mCards = null;
+    boolean isJudge = false;
 
     public Player(String username){
         mUsername = username;
