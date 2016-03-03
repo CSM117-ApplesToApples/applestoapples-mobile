@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
                     MainActivity.this.finish();
                     MainActivity.this.startActivity(getIntent());
                 }
-
             }
         };
         timer.scheduleAtFixedRate(task, 0, 100000);
