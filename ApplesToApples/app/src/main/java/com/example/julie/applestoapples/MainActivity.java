@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         playerId = player.mPlayerID;
         this.mGame = new Game(player);
 
-     TextView groupView = (TextView) findViewById(R.id.groupView);
+        TextView groupView = (TextView) findViewById(R.id.groupView);
         groupView.setText("GroupId: " + groupId);
 
         //Update and get Game attributes to display
@@ -78,7 +78,8 @@ public class MainActivity extends AppCompatActivity {
                     timer.purge();
                     MainActivity.this.finish();
                     MainActivity.this.startActivity(getIntent());
-             }
+                }
+
             }
         };
         timer.scheduleAtFixedRate(task, 0, 100000);

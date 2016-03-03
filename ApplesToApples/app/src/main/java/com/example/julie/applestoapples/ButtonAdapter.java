@@ -1,12 +1,16 @@
 package com.example.julie.applestoapples;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -19,7 +23,8 @@ public class ButtonAdapter extends BaseAdapter {
     Player mplayer;
     Context mContext;
 
-    public ButtonAdapter(List<Card> c, Context context){
+    public ButtonAdapter(List<Card> c, Context context, Player player){
+        mplayer = player;
         mCards = c;
         mContext = context;
     }
@@ -36,17 +41,29 @@ public class ButtonAdapter extends BaseAdapter {
     }
 
     public View getView(int position, View convertView, ViewGroup parent){
-        Button button;
+        TextView card;
         if (convertView == null) {
-            button = new Button(mContext);
-            button.setLayoutParams(new GridView.LayoutParams(600,100));
-            button.setBackgroundColor(Color.parseColor("#FF6666"));
-            button.setPadding(5, 2, 5, 2);
+            card = new Button(mContext);
+            card.setLayoutParams(new GridView.LayoutParams(600, 100));
+            card.setBackgroundColor(Color.parseColor("#FF6666"));
+            card.setPadding(5, 2, 5, 2);
+            card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    v.setBackgroundColor(Color.parseColor("#7F0000"));
+                    TextView card = (TextView) v;
+
+                    System.out.println(card.getText());
+
+
+                }
+            });
+
         }else{
-            button = (Button) convertView;
+            card = (Button) convertView;
         }
-        button.setText(mCards.get(position).mName);
-        return button;
+        card.setText(mCards.get(position).mName);
+        return card;
     }
 
 
