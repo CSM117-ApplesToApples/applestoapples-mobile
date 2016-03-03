@@ -50,16 +50,17 @@ public class MainActivity extends AppCompatActivity {
         grid.setAdapter(new ButtonAdapter(mGame.mPlayer.mCards, this, this.player));
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 Toast.makeText(MainActivity.this, position, Toast.LENGTH_SHORT).show();
                 Log.i("MA", "Click "+((Card) grid.getAdapter().getItem(position)).mName);
-                if(mGame.mIfJudge) {
-                    boolean success = mGame.mPlayer.selectCard((Card) grid.getAdapter().getItem(position));
-                    Log.i("MA", "select:" + ((Card) grid.getAdapter().getItem(position)).mName + ", ret: "+ success);
-                }
-                else {
-                    boolean success = mGame.mPlayer.submitCard((Card)grid.getAdapter().getItem(position));
-                    Log.i("MA", "submit:" + ((Card) grid.getAdapter().getItem(position)).mName + ", ret: " + success);
-                }
+//                if(mGame.mIfJudge) {
+//                    boolean success = mGame.mPlayer.selectCard((Card) grid.getAdapter().getItem(position));
+//                    Log.i("MA", "select:" + ((Card) grid.getAdapter().getItem(position)).mName + ", ret: "+ success);
+//                }
+//                else {
+//                    boolean success = mGame.mPlayer.submitCard((Card)grid.getAdapter().getItem(position).t);
+//                    Log.i("MA", "submit:" + ((Card) grid.getAdapter().getItem(position)).mName + ", ret: " + success);
+//                }
             }
         });
     }

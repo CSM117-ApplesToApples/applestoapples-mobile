@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import org.json.JSONObject;
 
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -65,11 +66,14 @@ public class Player implements Parcelable{
         dest.writeTypedList(mCards);
     }
 
-    public boolean submitCard(Card card){
-        final String request = "submit?groupID="+mGroupID+"&playerID="+mPlayerID
-                +"&cardText="+card.mName;
+    public boolean submitCard(String cardText){
+
         boolean ret = false;
-        try {
+
+        try{
+        final String request = "http://dev.mrerickruiz.com/ata/submit?groupID="+mGroupID+"&playerID="+mPlayerID
+                +"&cardText="+ URLEncoder.encode(cardText, "UTF-8");
+
             JSONObject resp = new HttpThread().execute(request).get(10, TimeUnit.SECONDS);
             JsonParser parser = new JsonParser();
             ret = parser.readSuccess(resp);
@@ -80,11 +84,13 @@ public class Player implements Parcelable{
         return ret;
     }
 
-    public boolean selectCard(Card card){
-        final String request = "select?groupID="+mGroupID+"&playerID="+mPlayerID
-                +"&cardText="+card.mName;
+    public boolean selectCard(String cardText){
         boolean ret = false;
-        try {
+
+        try{
+        final String request = "select?groupID="+mGroupID+"&playerID="+mPlayerID
+                +"&cardText="+ URLEncoder.encode(cardText, "UTF-8");
+
             JSONObject resp = new HttpThread().execute(request).get(10, TimeUnit.SECONDS);
             JsonParser parser = new JsonParser();
             ret = parser.readSuccess(resp);

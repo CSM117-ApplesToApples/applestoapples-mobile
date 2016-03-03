@@ -2,6 +2,7 @@ package com.example.julie.applestoapples;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,8 +53,15 @@ public class ButtonAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     v.setBackgroundColor(Color.parseColor("#7F0000"));
                     TextView card = (TextView) v;
+                    if(mplayer.isJudge == true) {
+                        mplayer.selectCard(card.getText().toString());
+
+                    }else{
+                        mplayer.submitCard(card.getText().toString());
+                    }
 
                     System.out.println(card.getText());
+
 
 
                 }
