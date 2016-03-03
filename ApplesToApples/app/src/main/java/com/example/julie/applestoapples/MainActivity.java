@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 judge.setText("The judge is " + this.mGame.judgeName);
 
                 grid.setVisibility(View.VISIBLE);
-                grid.setAdapter(new ButtonAdapter(player.mCards, this));
+                grid.setAdapter(new ButtonAdapter(this.player.mCards, this, player));
                 grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
