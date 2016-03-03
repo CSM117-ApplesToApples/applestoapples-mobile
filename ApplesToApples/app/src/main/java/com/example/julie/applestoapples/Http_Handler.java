@@ -100,7 +100,7 @@ public class Http_Handler {
         return ret;
     }
 
-    static public boolean createGroup(String username){
+    static public boolean createGroup(LoginActivity.UserLoginTask activity, String username){
         final String request = "player?name=" + username;
         boolean ret = false;
 
@@ -115,6 +115,8 @@ public class Http_Handler {
             int responseCode = conn.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 in = new BufferedInputStream(conn.getInputStream());
+                Player player = parser.readPlayerInfo(in);
+                activity.mLoginPlayer = player;
 
                 ret = true;
             } else {

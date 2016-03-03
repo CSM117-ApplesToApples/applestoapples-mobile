@@ -373,7 +373,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if (mGameType == JOIN_GAME)
                 return Http_Handler.joinGroup(this, mName, mGroupId);
             else
-                return Http_Handler.createGroup(mName);
+                return Http_Handler.createGroup(this, mName);
         }
 
         @Override
