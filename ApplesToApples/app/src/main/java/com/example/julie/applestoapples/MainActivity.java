@@ -55,33 +55,37 @@ public class MainActivity extends AppCompatActivity {
        if(this.mGame.GameInProgress)
         {
             displayCurrentGame();
+            if(this.mGame.mIfJudge){
+
+                timer = new Timer();
+                TimerTask task = new TimerTask() {
+                    @Override
+                    public void run() {
+                        boolean gameStatus = MainActivity.this.mGame.GameInProgress;
+                        MainActivity.this.getGame();
+                        if (gameStatus != MainActivity.this.mGame.GameInProgress) {
+                            timer.purge();
+                            MainActivity.this.finish();
+                            MainActivity.this.startActivity(getIntent());
+                        }
+                    }
+                };
+                timer.scheduleAtFixedRate(task, 0, 100000);
+
+            }
 
         }
         else{
             Intent resultsPage = new Intent(this, ResultsActivity.class );
-            resultsPage.putExtra("groupID", groupId);
-            resultsPage.putExtra("winner", this.mGame.winner);
-            resultsPage.putExtra("redCard", this.mGame.winningCard);
-            resultsPage.putExtra("greenCard", this.mGame.greenCard);
+            resultsPage.putExtra("isJudge", this.mGame.mIfJudge);
+            resultsPage.putExtra("groupID", this.groupId);
+            resultsPage.putExtra("playerID", this.playerId);
             startActivity(resultsPage);
         }
 
     //TODO should only set timer after the player has submit a card
         //or if it is the judge, set timer until to check if all players have submitted a card.
-        timer = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                boolean gameStatus = MainActivity.this.mGame.GameInProgress;
-                MainActivity.this.getGame();
-                if (gameStatus != MainActivity.this.mGame.GameInProgress) {
-                    timer.purge();
-                    MainActivity.this.finish();
-                    MainActivity.this.startActivity(getIntent());
-                }
-            }
-        };
-        timer.scheduleAtFixedRate(task, 0, 100000);
+
     }
 
     @Override

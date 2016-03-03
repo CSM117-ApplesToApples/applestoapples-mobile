@@ -53,15 +53,22 @@ public class ButtonAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     v.setBackgroundColor(Color.parseColor("#7F0000"));
                     TextView card = (TextView) v;
-                    if(mplayer.isJudge == true) {
+                    if (mplayer.isJudge == true) {
                         mplayer.selectCard(card.getText().toString());
 
-                    }else{
+
+                    } else {
                         mplayer.submitCard(card.getText().toString());
+
                     }
 
-                    System.out.println(card.getText());
+                    Intent results = new Intent(mContext.getApplicationContext(), ResultsActivity.class);
+                    results.putExtra("isJudge" , mplayer.isJudge);
+                    results.putExtra("groupID", mplayer.mGroupID);
+                    results.putExtra("playerID", mplayer.mPlayerID);
+                    mContext.startActivity(results);
 
+                    System.out.println(card.getText());
 
 
                 }
