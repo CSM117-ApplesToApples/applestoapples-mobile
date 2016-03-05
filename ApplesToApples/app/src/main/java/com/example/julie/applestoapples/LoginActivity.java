@@ -206,6 +206,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
+
         if (mAuthTask != null) {
             return;
         }
@@ -220,9 +221,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         boolean cancel = false;
         View focusView = null;
+        
 
         // Check for a valid group ID, if the user entered one.
-       if (TextUtils.isEmpty(groupId) && !isGroupIdValid(groupId)) {
+       if (createOrJoin == JOIN_GAME && (TextUtils.isEmpty(groupId) || !isGroupIdValid(groupId))) {
             mGroupIdView.setError(getString(R.string.error_invalid_groupId));
             focusView = mGroupIdView;
             cancel = true;
@@ -239,6 +241,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
+            Log.e("debugging", "login canceled");
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
@@ -250,7 +253,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean isGroupIdValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > 0;
     }
 
     /**
