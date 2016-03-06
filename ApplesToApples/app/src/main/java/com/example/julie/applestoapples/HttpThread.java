@@ -1,6 +1,7 @@
 package com.example.julie.applestoapples;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,7 +50,7 @@ public class HttpThread extends AsyncTask<String, String, JSONObject>{
                 }
                 in.close();
                 conn.disconnect();
-                System.out.println(result.toString());
+                Log.i("HttpThread", "Url: "+url + " Response: "+result.toString());
                 ret = new JSONObject(result.toString());
 
              } else {

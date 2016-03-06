@@ -4,6 +4,7 @@ import android.util.JsonReader;
 import android.util.JsonToken;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -16,6 +17,26 @@ import java.util.List;
  * Created by Evannnnn on 2/28/16.
  */
 public class JsonParser {
+
+    public Card readCard(JSONObject jsonObject) {
+        Card ret = new Card();
+
+        try{
+            String cardsString = jsonObject.getString("Cards");
+            cardsString = cardsString.substring(1, cardsString.length() - 1);
+            String[] cards = cardsString.split("],");
+            String cardLast = cards[cards.length-1];
+            cardLast = cardLast.substring(2, cardLast.length() - 1);
+            String[] card = cardLast.split(",");
+            ret.mID = Integer.parseInt(card[0]);
+            ret.mName = card[1].substring(2, card[1].length()-1);
+            Log.i("JsonParser", "read Card: "+ret.mID+", "+ret.mName);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ret;
+    }
 
     public boolean readSuccess(JSONObject jsonObject) {
         boolean ret = false;

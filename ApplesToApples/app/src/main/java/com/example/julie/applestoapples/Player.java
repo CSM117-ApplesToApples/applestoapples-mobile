@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import android.util.Log;
 
 /**
  * Created by Evannnnn on 2/28/16.
@@ -67,6 +68,7 @@ public class Player implements Parcelable{
     }
 
     public boolean submitCard(String cardText){
+        Log.i("Player", "Submit cad: "+cardText);
 
         boolean ret = false;
 
@@ -77,6 +79,19 @@ public class Player implements Parcelable{
             JSONObject resp = new HttpThread().execute(request).get(10, TimeUnit.SECONDS);
             JsonParser parser = new JsonParser();
             ret = parser.readSuccess(resp);
+            if(ret){
+                Card newCard = parser.readCard(resp);
+                for(int i = 0; i < mCards.size(); i++){
+                    if(mCards.get(i).mName == cardText) {
+                        mCards.remove(i);
+                        break;
+                    }
+                }
+                mCards.add(newCard);
+                for(int i = 0; i < mCards.size(); i++){
+                    Log.i("Player: SubmitCard", mCards.get(i).mID + ", "+mCards.get(i).mName);
+                }
+            }
         }
         catch(Exception e){
             e.printStackTrace();
@@ -85,6 +100,7 @@ public class Player implements Parcelable{
     }
 
     public boolean selectCard(String cardText){
+        Log.i("Player", "Select cad: "+cardText);
         boolean ret = false;
 
         try{

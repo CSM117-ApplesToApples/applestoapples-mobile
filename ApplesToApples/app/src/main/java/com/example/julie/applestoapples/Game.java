@@ -42,6 +42,7 @@ public class Game {
 
     //TODO update player's cards
     public void updateGame(JSONObject response){
+        Log.i("Game", "Update");
     try {
         greenCard = response.getString("GreenCard");
         if (response.getBoolean("status")) {
@@ -56,6 +57,7 @@ public class Game {
                 judgeName = response.getString("CurrentJudgeName");
 
                //TODO assign player.mCards for new round
+               //in player submitCard
 
             }
         } else {

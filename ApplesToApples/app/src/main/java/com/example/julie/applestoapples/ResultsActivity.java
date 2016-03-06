@@ -3,6 +3,7 @@ package com.example.julie.applestoapples;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -118,6 +119,7 @@ public class ResultsActivity extends AppCompatActivity {
 
 
     public JSONObject getGame(){
+        Log.i("ResultsActivity", "getGame");
         String url = "http://dev.mrerickruiz.com/ata/" +
                 "game?groupID=" + groupId +
                 "&playerID=" + playerId;
@@ -129,7 +131,7 @@ public class ResultsActivity extends AppCompatActivity {
         }catch(Exception e){
             e.printStackTrace();
         }
-        System.out.println(resp);
+        //System.out.println(resp);
         return resp;
     }
 
