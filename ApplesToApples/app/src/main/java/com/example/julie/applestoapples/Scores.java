@@ -16,18 +16,15 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class Scores{
-    public static Map<String, Object> getScores(String groupID){
+    public static Map<String, String> getScores(String groupID){
 
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, String> map = new HashMap<String, String>();
 
         try{
             final String request = "http://dev.mrerickruiz.com/ata/score?groupID="+groupID;
 
             JSONObject resp = new HttpThread().execute(request).get(10, TimeUnit.SECONDS);
             map = toMap(resp);
-            //Map<String,Object> map = new ObjectMapper().readValue(resp, Map.class);
-            //JsonParser parser = new JsonParser();
-            //ret = parser.readSuccess(resp);
         }
         catch(Exception e){
             e.printStackTrace();
@@ -47,7 +44,7 @@ public class Scores{
         } else if (object instanceof Iterable) {
             JSONArray json = new JSONArray();
             for (Object value : ((Iterable)object)) {
-                json.put(value);
+                json.put(value.toString());
             }
             return json;
         } else {
@@ -59,17 +56,17 @@ public class Scores{
         return object.names() == null;
     }
 
-    public static Map<String, Object> getMap(JSONObject object, String key) throws JSONException {
+    public static Map<String, String> getMap(JSONObject object, String key) throws JSONException {
         return toMap(object.getJSONObject(key));
     }
 
-    public static Map<String, Object> toMap(JSONObject object) throws JSONException {
-        Map<String, Object> map = new HashMap();
+    public static Map<String, String> toMap(JSONObject object) throws JSONException {
+        Map<String, String> map = new HashMap();
         Iterator keys = object.keys();
         while (keys.hasNext()) {
             String key = (String) keys.next();
             //map.put(key, fromJson(object.get(key)));
-            map.put(key, object.get(key));
+            map.put(key, (String) object.getString(key));
         }
         return map;
     }
