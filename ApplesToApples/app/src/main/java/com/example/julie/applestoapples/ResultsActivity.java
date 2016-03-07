@@ -42,20 +42,19 @@ public class ResultsActivity extends AppCompatActivity {
         try {
 
             TextView green = (TextView) findViewById(R.id.resultGreen);
-            //green.setText(resp.getString("GreenCard"));
+            green.setText(resp.getString("GreenCard"));
+            redCard = resp.getString("WinningCard");
 
-
-                setResults(resp);
-                TextView banner = (TextView) findViewById(R.id.banner);
-                banner.setText("The winner is ");
-                TextView winner = (TextView) findViewById(R.id.banner_winner);
-                winner.setText(winner + "!");
-                TextView red = (TextView) findViewById(R.id.resultRed);
-                red.setText(redCard);
-                TextView resultStatus = (TextView) findViewById(R.id.resultView);
-                resultStatus.setVisibility(View.GONE);
-                Button newGame = (Button) findViewById(R.id.new_game_button);
-                newGame.setVisibility(View.VISIBLE);
+            TextView banner = (TextView) findViewById(R.id.banner);
+            banner.setText("The winner is ");
+            TextView winner = (TextView) findViewById(R.id.banner_winner);
+            winner.setText(resp.getString("Winner") + "!");
+            TextView red = (TextView) findViewById(R.id.resultRed);
+            red.setText(redCard);
+            TextView resultStatus = (TextView) findViewById(R.id.resultView);
+            resultStatus.setVisibility(View.GONE);
+            Button newGame = (Button) findViewById(R.id.new_game_button);
+            newGame.setVisibility(View.VISIBLE);
 
 
         } catch (Exception e) {
@@ -63,19 +62,7 @@ public class ResultsActivity extends AppCompatActivity {
         }
     }
 
-    public void setResults(JSONObject res){
-        try {
-            System.out.println(res);
-            if (res.getBoolean("status")== false) {
-                redCard = res.getString("WinningCard");
-                winner = res.getString("Winner");
 
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return;
-    }
 
 
 
