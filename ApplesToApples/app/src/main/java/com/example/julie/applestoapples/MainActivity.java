@@ -1,6 +1,9 @@
 package com.example.julie.applestoapples;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import android.content.Intent;
@@ -35,6 +38,7 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
+//import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -85,18 +89,13 @@ public class MainActivity extends AppCompatActivity {
                 judge.setText("The judge is " + this.mGame.judgeName);
                 grid.setVisibility(View.VISIBLE);
                 grid.setAdapter(new ButtonAdapter(this.player.mCards, this, player));
-                /*grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Toast.makeText(MainActivity.this, position, Toast.LENGTH_SHORT).show();
-                    }
-                });*/
+
             }
             else{
                 //JUDGE VIEW
                 banner.setText("You are the judge.");
-                player.mCards = null;
-
+                player.mCards = new ArrayList<>();
+                grid.setAdapter(new ButtonAdapter(this.player.mCards, this, player));
                 timer = new Timer();
                 TimerTask task = new TimerTask() {
                     @Override
@@ -105,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                             JSONObject resp = MainActivity.this.getGame();
                             if (resp.getBoolean("canSelect") == true) {
                                 timer.purge();
-                                displaySelectedCards(resp.getString("CardsSubmitted"));
+                                MainActivity.this.player.mCards = parseCards(resp.getString("CardsSubmitted"));
                             }
                         }catch (Exception e){
                             e.printStackTrace();
@@ -151,46 +150,25 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public List readTuplesArray(JsonReader reader) throws IOException {
-        //Log.i("JsonParser", "readTuplesArray");
-        List<Card> cards = new ArrayList();
+    public ArrayList<Card> parseCards(String cards){
+        ArrayList<Card> mCards = new ArrayList<>();
 
-        reader.beginArray();
-        while (reader.hasNext()) {
-            cards.add(readCard(reader));
+        //ArrayList<String> cardText = new ArrayList<>(map.values());
+
+        ArrayList<String> cardText = new ArrayList<>();
+        cardText.add("Hi");
+        cardText.add("Testing");
+        for(int i = 0; i < cardText.size(); i++) {
+            Card c = new Card();
+            c.mID = i;
+            c.mName = cardText.get(i);
+            mCards.add(c);
         }
-        reader.endArray();
-        return cards;
+        return mCards;
     }
 
-    public Card readCard(JsonReader reader) throws IOException {
-        //Log.i("JsonParser", "readCard");
-        Card ret = new Card();
-        reader.beginArray();
-        ret.mID = reader.nextInt();
-        ret.mName = reader.nextString();
-        reader.endArray();
-
-        return ret;
-    }
-
-    public void displaySelectedCards(String cardsSubmitted){
 
 
-        GridView grid = (GridView) findViewById(R.id.gridView);
-
-        //TODO SET SELECTED CARD TO JUDGE's mCards
-        //player.mCards =
-        grid.setAdapter(new ButtonAdapter(this.player.mCards, this, player));
-        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(MainActivity.this, position, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-    }
 
 
     public JSONObject getGame(){

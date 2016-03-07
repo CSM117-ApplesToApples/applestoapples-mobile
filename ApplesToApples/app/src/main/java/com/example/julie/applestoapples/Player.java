@@ -41,6 +41,11 @@ public class Player implements Parcelable{
         mCards = in.createTypedArrayList(Card.CREATOR);
     }
 
+    public void updateCards(Parcel in){
+        mCards = in.createTypedArrayList(Card.CREATOR);
+    }
+
+
     public static final Creator<Player> CREATOR = new Creator<Player>() {
         @Override
         public Player createFromParcel(Parcel in) {
