@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -42,17 +43,13 @@ import java.util.logging.Handler;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button scores;
-    private PopupWindow scoreWindow;
-    private LayoutInflater layoutInflater;
-    private LinearLayout linearLayout;
-    public ListView lv;
-
     Game mGame = null;
     Player player = null;
     private String groupId;
     private int playerId;
     private Timer timer;
+
+    AlertDialog alertDialogScores;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,8 +111,18 @@ public class MainActivity extends AppCompatActivity {
                 timer.scheduleAtFixedRate(task, 0, 10000);
              }
 
-            displayScores();
+            View.OnClickListener handler = new View.OnClickListener(){
+                public void onClick(View v) {
+                    switch (v.getId()) {
 
+                        case R.id.scoreboard_button:
+                            showPopUp();
+                            break;
+                    }
+                }
+            };
+
+            findViewById(R.id.scoreboard_button).setOnClickListener(handler);
 
         }
         else{
@@ -190,37 +197,23 @@ public class MainActivity extends AppCompatActivity {
         return resp;
     }
 
-    public void displayScores(){
-        //START OF SCOREBOARD
-        scores = (Button) findViewById(R.id.scoreboard_button);
-        linearLayout = (LinearLayout) findViewById(R.id.linear);
-        //ArrayList<HashMap<String, String>> mapList;
+    public void showPopUp(){
 
+        // add items
+        Map<String, String> temp = Scores.getScores(groupId);
+        HashMapAdapter adapter = new HashMapAdapter(temp);
 
-        scores.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                lv = (ListView) findViewById(R.id.scorelist);
-                Map<String, Object> temp = Scores.getScores(groupId);
-                HashMapAdapter adapter = new HashMapAdapter(temp);
-                lv.setAdapter(adapter);
+        // create a new ListView, set the adapter and item click listener
+        ListView listViewItems = new ListView(this);
+        listViewItems.setAdapter(adapter);
+        listViewItems.setOnItemClickListener(new OnItemClickListenerListViewItem());
 
-                layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                ViewGroup container = (ViewGroup) layoutInflater.inflate(R.layout.display_scores,null);
+        // put the ListView in the pop up
+        alertDialogScores = new AlertDialog.Builder(MainActivity.this)
+                .setView(listViewItems)
+                .setTitle("Scores")
+                .show();
 
-                scoreWindow = new PopupWindow(container, 800, 1000, true);
-                scoreWindow.showAtLocation(linearLayout, Gravity.CENTER, 0,0);
-
-                container.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View view, MotionEvent motionEvent) {
-                        scoreWindow.dismiss();
-                        return true;
-                    }
-                });
-            }
-        });
-        //END OF SCOREBOARD
     }
 
 }
