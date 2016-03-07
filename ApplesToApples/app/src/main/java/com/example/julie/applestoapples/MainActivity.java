@@ -9,6 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.JsonReader;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,12 +20,16 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ImageView;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -30,6 +37,13 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 
 public class MainActivity extends AppCompatActivity {
+
+    private Button scores;
+    private PopupWindow scoreWindow;
+    private LayoutInflater layoutInflater;
+    private LinearLayout linearLayout;
+    public ListView lv;
+
     Game mGame = null;
     Player player = null;
     private String groupId;
@@ -100,6 +114,8 @@ public class MainActivity extends AppCompatActivity {
                 };
                 timer.scheduleAtFixedRate(task, 0, 10000);
              }
+
+            displayScores();
 
 
         }
@@ -195,5 +211,39 @@ public class MainActivity extends AppCompatActivity {
 
         return resp;
     }
+
+    public void displayScores(){
+        //START OF SCOREBOARD
+        scores = (Button) findViewById(R.id.scoreboard_button);
+        linearLayout = (LinearLayout) findViewById(R.id.linear);
+        //ArrayList<HashMap<String, String>> mapList;
+
+
+        scores.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                lv = (ListView) findViewById(R.id.scorelist);
+                Map<String, Object> temp = Scores.getScores(groupId);
+                HashMapAdapter adapter = new HashMapAdapter(temp);
+                lv.setAdapter(adapter);
+
+                layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                ViewGroup container = (ViewGroup) layoutInflater.inflate(R.layout.display_scores,null);
+
+                scoreWindow = new PopupWindow(container, 800, 1000, true);
+                scoreWindow.showAtLocation(linearLayout, Gravity.CENTER, 0,0);
+
+                container.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        scoreWindow.dismiss();
+                        return true;
+                    }
+                });
+            }
+        });
+        //END OF SCOREBOARD
+    }
+
 }
 
