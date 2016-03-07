@@ -1,10 +1,13 @@
 package com.example.julie.applestoapples;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -53,14 +56,15 @@ public class MainActivity extends AppCompatActivity {
         scoreView.setText("Score: " + player.mScore);
 
         //Update and get Game attributes to display
-        getGame();
+        JSONObject resp = getGame();
+        this.mGame.updateGame(resp);
 
         if(this.mGame.GameInProgress) {
 
             TextView currentGreenCard = (TextView) findViewById(R.id.greenCard);
             currentGreenCard.setText(this.mGame.greenCard);
             TextView banner = (TextView) findViewById(R.id.banner);
-            GridView grid = (GridView) findViewById(R.id.gridView);
+            final GridView grid = (GridView) findViewById(R.id.gridView);
             if (this.mGame.mIfJudge == false) {
                 //PLAYER VIEW
                 TextView judge = (TextView) findViewById(R.id.judgeView);
@@ -78,16 +82,19 @@ public class MainActivity extends AppCompatActivity {
                 //JUDGE VIEW
                 banner.setText("You are the judge.");
                 player.mCards = null;
-                grid.setVisibility(View.GONE);
 
                 timer = new Timer();
                 TimerTask task = new TimerTask() {
                     @Override
                     public void run() {
-                        MainActivity.this.getGame();
-                        if (MainActivity.this.mGame.canSelect == true) {
-                            timer.purge();
-                            displaySelectedCards();
+                        try {
+                            JSONObject resp = MainActivity.this.getGame();
+                            if (resp.getBoolean("canSelect") == true) {
+                                timer.purge();
+                                displaySelectedCards(resp.getString("CardsSubmitted"));
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
                         }
                     }
                 };
@@ -128,11 +135,33 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public List readTuplesArray(JsonReader reader) throws IOException {
+        //Log.i("JsonParser", "readTuplesArray");
+        List<Card> cards = new ArrayList();
+
+        reader.beginArray();
+        while (reader.hasNext()) {
+            cards.add(readCard(reader));
+        }
+        reader.endArray();
+        return cards;
+    }
+
+    public Card readCard(JsonReader reader) throws IOException {
+        //Log.i("JsonParser", "readCard");
+        Card ret = new Card();
+        reader.beginArray();
+        ret.mID = reader.nextInt();
+        ret.mName = reader.nextString();
+        reader.endArray();
+
+        return ret;
+    }
+
+    public void displaySelectedCards(String cardsSubmitted){
 
 
-    public void displaySelectedCards(){
         GridView grid = (GridView) findViewById(R.id.gridView);
-        grid.setVisibility(View.VISIBLE);
 
         //TODO SET SELECTED CARD TO JUDGE's mCards
         //player.mCards =
@@ -148,12 +177,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void getGame(){
-
-        if(groupId == null | groupId == "")
-            return;
+    public JSONObject getGame(){
 
         JSONObject resp = null;
+
+        if(groupId == null | groupId == "")
+            return resp;
+
         String url = "http://dev.mrerickruiz.com/ata/" +
                 "game?groupID=" + groupId +
                 "&playerID=" + playerId;
@@ -163,8 +193,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        this.mGame.updateGame(resp);
-        return;
+        return resp;
     }
 }
 
