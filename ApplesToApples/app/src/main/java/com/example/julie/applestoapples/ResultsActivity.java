@@ -18,7 +18,6 @@ import java.util.concurrent.TimeUnit;
 
 public class ResultsActivity extends AppCompatActivity {
 
-    Timer timer;
     String groupId = "";
     int playerId;
     String greenCard;
@@ -37,55 +36,28 @@ public class ResultsActivity extends AppCompatActivity {
 
         TextView displayGroupId = (TextView) findViewById(R.id.groupIdView);
         displayGroupId.setText("GroupID: " + groupId);
-        TextView banner = (TextView) findViewById(R.id.banner);
-        TextView resultView = (TextView) findViewById(R.id.resultView);
-
-        if (intent.getBooleanExtra("isJudge", true) == false) {
-
-            String submitted = intent.getStringExtra("submittedCard");
-            banner.setText("You submitted: ");
-            TextView submittedCard = (TextView) findViewById(R.id.banner_winner);
-            submittedCard.setText(submitted);
-            resultView.setText("Waiting for judge's results... ");
-        }
-        else{
-
-            banner.setText("Fetching results... ");
-        }
 
 
         JSONObject resp = getGame();
         try {
 
             TextView green = (TextView) findViewById(R.id.resultGreen);
-            green.setText(resp.getString("GreenCard"));
+            //green.setText(resp.getString("GreenCard"));
 
-            if (resp.getBoolean("status")) {
 
-                    timer = new Timer();
-                    TimerTask task = new TimerTask() {
-                        @Override
-                        public void run() {
-                            JSONObject res = getGame();
-                            try {
-                                if (res.getBoolean("status") == false) {
-                                    timer.purge();
-                                    setResults(res);
-                                    displayResults();
-                                }
-                            }catch(Exception e){
-                                e.printStackTrace();
-                            }
-
-                        }
-                    };
-                    timer.scheduleAtFixedRate(task, 0, 10000);
-
-            }
-            else {
                 setResults(resp);
-                displayResults();
-            }
+                TextView banner = (TextView) findViewById(R.id.banner);
+                banner.setText("The winner is ");
+                TextView winner = (TextView) findViewById(R.id.banner_winner);
+                winner.setText(winner + "!");
+                TextView red = (TextView) findViewById(R.id.resultRed);
+                red.setText(redCard);
+                TextView resultStatus = (TextView) findViewById(R.id.resultView);
+                resultStatus.setVisibility(View.GONE);
+                Button newGame = (Button) findViewById(R.id.new_game_button);
+                newGame.setVisibility(View.VISIBLE);
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -93,9 +65,11 @@ public class ResultsActivity extends AppCompatActivity {
 
     public void setResults(JSONObject res){
         try {
-            if (res.getBoolean("status")) {
+            System.out.println(res);
+            if (res.getBoolean("status")== false) {
                 redCard = res.getString("WinningCard");
                 winner = res.getString("Winner");
+
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -103,19 +77,6 @@ public class ResultsActivity extends AppCompatActivity {
         return;
     }
 
-    public void displayResults(){
-
-        TextView banner = (TextView) findViewById(R.id.banner);
-        banner.setText("The winner is ");
-        TextView winner = (TextView) findViewById(R.id.banner_winner);
-        winner.setText(winner + "!");
-        TextView red = (TextView) findViewById(R.id.resultRed);
-        red.setText(redCard);
-        TextView resultStatus = (TextView) findViewById(R.id.resultView);
-        resultStatus.setVisibility(View.GONE);
-        Button newGame = (Button) findViewById(R.id.new_game_button);
-        newGame.setVisibility(View.VISIBLE);
-    }
 
 
     public JSONObject getGame(){
@@ -135,17 +96,19 @@ public class ResultsActivity extends AppCompatActivity {
         return resp;
     }
 
-    public void setNewGame(View v){
+    public void startNewGame(View v){
 
         JSONObject resp = null;
         String url = "http://dev.mrerickruiz.com/ata/" +
-                "newgame?groupID=" + groupId;
+                "newgame?groupID=" + groupId + "&playerID=" + playerId;
+        System.out.println(url);
         try{
             resp =  new HttpThread().execute(url).get(10, TimeUnit.SECONDS);
         }catch(Exception e){
             e.printStackTrace();
         }
 
+        System.out.println(resp);
         finish();
         return;
     }

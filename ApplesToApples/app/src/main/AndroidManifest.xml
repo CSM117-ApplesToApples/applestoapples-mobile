@@ -37,6 +37,24 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.julie.applestoapples.MainActivity" />
         </activity>
+        <activity
+            android:name=".SelectActivity"
+            android:label="@string/title_activity_select"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.julie.applestoapples.MainActivity" />
+        </activity>
+        <activity
+            android:name=".WaitingActivity"
+            android:label="@string/title_activity_waiting"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.julie.applestoapples.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

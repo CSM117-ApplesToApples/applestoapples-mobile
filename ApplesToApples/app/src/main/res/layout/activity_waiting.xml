@@ -4,30 +4,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:fitsSystemWindows="true"
-    tools:context="com.example.julie.applestoapples.ResultsActivity">
+    tools:context="com.example.julie.applestoapples.WaitingActivity">
 
-
-    <include layout="@layout/content_results" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorGreen">
+        android:layout_height="match_parent">
 
 
         <TextView
-            android:id="@+id/groupIdView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/wait_groupView"
             android:gravity="right"
             android:textSize="20sp"
             android:paddingBottom="20dp"/>
 
 
-
         <TextView
-            android:id="@+id/banner"
+            android:id="@+id/wait_bannerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -37,8 +33,10 @@
             android:textSize="32sp"
             android:paddingBottom="8dp"/>
 
+
+
         <TextView
-            android:id="@+id/banner_winner"
+            android:id="@+id/wait_cardSelected"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -65,7 +63,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/resultGreen"
+                    android:id="@+id/wait_greenView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -75,40 +73,10 @@
                     android:textSize="30sp"/>
 
 
-                <TextView
-                    android:id="@+id/resultRed"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical|center"
-                    android:textColor="#FF0000"
-                    android:textStyle="bold"
-                    android:textSize="30sp"/>
             </LinearLayout>
 
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/resultView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="#000000"
-            android:textStyle="bold"
-            android:textSize="30sp"/>
 
-
-        <Button android:id="@+id/new_game_button"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" android:text="Enter New Round"
-            android:textStyle="bold"
-            android:textColor="#000000"
-            android:background="@color/colorSharpRed"
-            android:onClick="startNewGame"
-            android:layout_gravity="center"
-            android:visibility="invisible"
-            />
     </LinearLayout>
-
-
-
 </android.support.design.widget.CoordinatorLayout>

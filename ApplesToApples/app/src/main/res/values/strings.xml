@@ -19,4 +19,6 @@
     </string>
     <string name="title_activity_results">ResultsActivity</string>
     <string name="game_id">1234</string>
+    <string name="title_activity_select">SelectActivity</string>
+    <string name="title_activity_waiting">WaitingActivity</string>
 </resources>

@@ -31,9 +31,12 @@ public class ButtonAdapter extends BaseAdapter {
     }
 
     public int getCount(){
+        if (mCards.isEmpty())
+            return 0;
         return mCards.size();
     }
     public Card getItem(int position){
+
         return mCards.get(position);
     }
 
@@ -62,12 +65,12 @@ public class ButtonAdapter extends BaseAdapter {
 
                     }
 
-                    Intent results = new Intent(mContext.getApplicationContext(), ResultsActivity.class);
-                    results.putExtra("submittedCard", card.getText());
-                    results.putExtra("isJudge" , mplayer.isJudge);
-                    results.putExtra("groupID", mplayer.mGroupID);
-                    results.putExtra("playerID", mplayer.mPlayerID);
-                    mContext.startActivity(results);
+                    Intent wait = new Intent(mContext.getApplicationContext(), WaitingActivity.class);
+                    wait.putExtra("submittedCard", card.getText());
+                    wait.putExtra("isJudge" , mplayer.isJudge);
+                    wait.putExtra("groupID", mplayer.mGroupID);
+                    wait.putExtra("playerID", mplayer.mPlayerID);
+                    mContext.startActivity(wait);
 
                     System.out.println(card.getText());
 

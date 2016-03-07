@@ -1,6 +1,7 @@
 package com.example.julie.applestoapples;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,11 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.JsonReader;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
+
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,9 +34,9 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Handler;
-//import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,8 +52,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         Intent main = getIntent();
         player = main.getExtras().getParcelable("player");
@@ -80,8 +75,10 @@ public class MainActivity extends AppCompatActivity {
             currentGreenCard.setText(this.mGame.greenCard);
             TextView banner = (TextView) findViewById(R.id.banner);
             final GridView grid = (GridView) findViewById(R.id.gridView);
+
             if (this.mGame.mIfJudge == false) {
                 //PLAYER VIEW
+                banner.setVisibility(View.GONE);
                 TextView judge = (TextView) findViewById(R.id.judgeView);
                 judge.setText("The judge is " + this.mGame.judgeName);
                 grid.setVisibility(View.VISIBLE);
@@ -91,8 +88,9 @@ public class MainActivity extends AppCompatActivity {
             else{
                 //JUDGE VIEW
                 banner.setText("You are the judge.");
-                player.mCards = new ArrayList<>();
-                grid.setAdapter(new ButtonAdapter(this.player.mCards, this, player));
+                TextView bannerBottom = (TextView) findViewById(R.id.banner_two);
+                bannerBottom.setText("Waiting for players' selections... ");
+
                 timer = new Timer();
                 TimerTask task = new TimerTask() {
                     @Override
@@ -100,15 +98,22 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             JSONObject resp = MainActivity.this.getGame();
                             if (resp.getBoolean("canSelect") == true) {
-                                timer.purge();
-                                MainActivity.this.player.mCards = parseCards(resp.getString("CardsSubmitted"));
+                                ArrayList<String> cards = parseCards(resp.getString("CardsSubmitted"));
+                                if(cards.isEmpty()){
+                                    System.out.println("No cards to display");
+                                    return;
+                                }else{
+
+                                    System.out.println("Click to display cards chosen by players");
+                                    updateJudgeView();
+                                }
                             }
                         }catch (Exception e){
                             e.printStackTrace();
                         }
                     }
                 };
-                timer.scheduleAtFixedRate(task, 0, 10000);
+                timer.scheduleAtFixedRate(task, 1000, 10000);
              }
 
             View.OnClickListener handler = new View.OnClickListener(){
@@ -157,25 +162,51 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public ArrayList<Card> parseCards(String cards){
-        ArrayList<Card> mCards = new ArrayList<>();
+    @Override
+    public void onRestart(){
+        super.onRestart();
+        System.out.println("restart main view");
+        finish();
+        Intent intent = getIntent();
+        startActivity(intent);
+    }
 
-        //ArrayList<String> cardText = new ArrayList<>(map.values());
+    public ArrayList<String> parseCards(String cards){
 
-        ArrayList<String> cardText = new ArrayList<>();
-        cardText.add("Hi");
-        cardText.add("Testing");
-        for(int i = 0; i < cardText.size(); i++) {
-            Card c = new Card();
-            c.mID = i;
-            c.mName = cardText.get(i);
-            mCards.add(c);
-        }
-        return mCards;
+        Gson gson = new Gson();
+        Type mapType = new TypeToken<Map<String,String>>(){}.getType();
+        Map<String, String> map = gson.fromJson(cards, mapType);
+        if(map == null)
+            return new ArrayList<>();
+        ArrayList<String> cardText = new ArrayList<>(map.values());
+
+
+        return cardText;
     }
 
 
-
+    public void updateJudgeView(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                TextView banner = (TextView) findViewById(R.id.banner_two);
+                banner.setVisibility(View.GONE);
+                Button selectWinner = (Button) findViewById(R.id.select_winner_button);
+                selectWinner.setVisibility(View.VISIBLE);
+                selectWinner.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MainActivity.this.timer.purge();
+                        MainActivity.this.timer.cancel();
+                        Intent selectActivity = new Intent(getApplicationContext(), SelectActivity.class);
+                        selectActivity.putExtra("groupID", MainActivity.this.groupId);
+                        selectActivity.putExtra("playerID", MainActivity.this.playerId);
+                        startActivity(selectActivity);
+                    }
+                });
+            }
+        });
+    }
 
 
     public JSONObject getGame(){
