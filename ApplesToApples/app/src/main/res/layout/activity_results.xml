@@ -13,7 +13,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorGreen">
+        android:background="@color/colorGray">
 
 
         <TextView
@@ -53,11 +53,13 @@
             android:layout_height="250dp"
             android:paddingBottom="10dp">
 
+            <!--
             <ImageView
                 android:id="@+id/appleMainImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/greenapple"/>
+           -->
 
             <TextView
                 android:id="@+id/resultGreen"
@@ -68,6 +70,8 @@
                 android:textColor="#000000"
                 android:textStyle="italic"
                 android:textSize="30sp"/>
+
+
 
         </RelativeLayout>
 
@@ -96,8 +100,6 @@
             android:layout_marginTop="16dp"
             android:text="Enter New Round"
             android:textStyle="bold"
-            android:textColor="#000000"
-            android:background="#FF4C4C"
             android:onClick="startNewGame"
             android:layout_gravity="center"
             android:visibility="invisible"/>
