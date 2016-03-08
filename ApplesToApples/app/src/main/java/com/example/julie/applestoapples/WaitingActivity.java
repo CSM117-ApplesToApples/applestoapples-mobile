@@ -26,7 +26,6 @@ public class WaitingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_waiting);
 
-
         Intent intent = getIntent();
         groupId = intent.getStringExtra("groupID");
         playerId = intent.getIntExtra("playerID", 0);
@@ -39,35 +38,33 @@ public class WaitingActivity extends AppCompatActivity {
         TextView cardSelected = (TextView) findViewById(R.id.wait_cardSelected);
         cardSelected.setText(submittedCard);
 
+        TextView fetchResBanner = (TextView) findViewById(R.id.wait_fetchResults);
+        fetchResBanner.setText("Waiting on results... ");
+
         JSONObject resp = getGame();
         try {
 
+            TextView green = (TextView) findViewById(R.id.wait_greenView);
+            green.setText(resp.getString("GreenCard"));
 
             if (resp.getBoolean("status")) {
 
                 timer = new Timer();
-                TimerTask task = new TimerTask() {
+                TimerTask task = new TimerTask(){
                     @Override
                     public void run() {
                         JSONObject res = getGame();
                         try {
                             if (res.getBoolean("status") == false) {
-                                timer.purge();
                                 timer.cancel();
                                 finish();
-//                                Intent wait = new Intent(getApplicationContext(), ResultsActivity.class);
-//                                wait.putExtra("groupID", groupId);
-//                                wait.putExtra("playerID", playerId);
-//                                startActivity(wait);
                             }
                         }catch(Exception e){
                             e.printStackTrace();
                         }
-
                     }
                 };
-                timer.scheduleAtFixedRate(task, 0, 10000);
-
+                timer.scheduleAtFixedRate(task, 0, 5000);
             }
             else {
                 //GO TO RESULTS PAGE
@@ -75,7 +72,6 @@ public class WaitingActivity extends AppCompatActivity {
                 wait.putExtra("groupID", groupId);
                 wait.putExtra("playerID", playerId);
                 startActivity(wait);
-
 
             }
         } catch (Exception e) {

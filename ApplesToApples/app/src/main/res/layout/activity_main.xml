@@ -49,7 +49,6 @@
                 android:textStyle="bold"
                 android:textSize="20sp"/>
 
-
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -83,8 +82,8 @@
                 android:layout_height="200dp"
                 android:gravity="center"
                 android:textColor="#000000"
-                android:textStyle="bold"
-                android:textSize="30sp"/>
+                android:textStyle="italic"
+                android:textSize="28sp"/>
 
         </RelativeLayout>
 
@@ -93,7 +92,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/gridView"
-            android:verticalSpacing="5dp"/>
+            android:verticalSpacing="5dp"
+            android:horizontalSpacing="10dp"/>
 
         <TextView
             android:id="@+id/banner_two"
@@ -105,10 +105,10 @@
             android:textSize="32sp"
             android:paddingBottom="8dp"/>
 
-
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingTop="20dp"
             android:text="Select Winner"
             android:id="@+id/select_winner_button"
             android:layout_gravity="center"

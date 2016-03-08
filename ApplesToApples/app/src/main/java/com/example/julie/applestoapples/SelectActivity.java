@@ -32,7 +32,6 @@ public class SelectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select);
 
-
         Intent main = getIntent();
         groupId = main.getStringExtra("groupID");
         playerId = main.getIntExtra("playerID", 0);
@@ -65,8 +64,8 @@ public class SelectActivity extends AppCompatActivity {
         GridView grid = (GridView) findViewById(R.id.select_grid);
         grid.setAdapter(new judgeAdapter(cards, this, groupId, playerId));
 
-
 }
+
 
     public ArrayList<String> parseCards(String cards){
 
@@ -79,7 +78,6 @@ public class SelectActivity extends AppCompatActivity {
 
         return cardText;
     }
-
 
 
 }

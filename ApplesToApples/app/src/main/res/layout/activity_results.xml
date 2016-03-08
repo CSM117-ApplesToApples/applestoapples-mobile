@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_gravity="bottom"
-            android:textColor="#FF0000"
+            android:textColor="#8b0000"
             android:textStyle="bold"
             android:textSize="32sp"
             android:paddingBottom="8dp"/>
@@ -59,33 +59,26 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/greenapple"/>
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/resultGreen"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/resultGreen"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center"
-                    android:textColor="#000000"
-                    android:textStyle="bold"
-                    android:textSize="30sp"/>
-
-
-                <TextView
-                    android:id="@+id/resultRed"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical|center"
-                    android:textColor="#FF0000"
-                    android:textStyle="bold"
-                    android:textSize="30sp"/>
-            </LinearLayout>
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:textColor="#000000"
+                android:textStyle="italic"
+                android:textSize="30sp"/>
 
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/resultRed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center"
+            android:textColor="#8b0000"
+            android:textStyle="bold"
+            android:textSize="30sp"/>
 
         <TextView
             android:id="@+id/resultView"
@@ -96,17 +89,19 @@
             android:textStyle="bold"
             android:textSize="30sp"/>
 
-
-        <Button android:id="@+id/new_game_button"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" android:text="Enter New Round"
+        <Button
+            android:id="@+id/new_game_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Enter New Round"
             android:textStyle="bold"
             android:textColor="#000000"
-            android:background="@color/colorSharpRed"
+            android:background="#FF4C4C"
             android:onClick="startNewGame"
             android:layout_gravity="center"
-            android:visibility="invisible"
-            />
+            android:visibility="invisible"/>
+
     </LinearLayout>
 
 
