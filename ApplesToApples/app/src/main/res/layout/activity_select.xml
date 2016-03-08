@@ -28,17 +28,16 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="#000000"
-            android:textStyle="bold"
-            android:textSize="32sp"/>
+            android:textSize="20sp"/>
 
         <TextView
         android:id="@+id/select_greenWord"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textColor="#006600"
+        android:textColor="@color/colorGreen"
         android:textStyle="bold"
-        android:textSize="32sp"/>
+        android:textSize="40sp"/>
 
         <GridView
             android:id="@+id/select_grid"

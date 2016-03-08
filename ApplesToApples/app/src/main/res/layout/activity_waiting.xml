@@ -29,8 +29,7 @@
             android:gravity="center"
             android:layout_gravity="bottom"
             android:textColor="#000000"
-            android:textStyle="bold"
-            android:textSize="32sp"
+            android:textSize="20sp"
             android:paddingBottom="8dp"/>
 
 
@@ -41,9 +40,9 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_gravity="bottom"
-            android:textColor="#FF0000"
+            android:textColor="@color/colorSharpRed"
             android:textStyle="bold"
-            android:textSize="32sp"
+            android:textSize="40sp"
             android:paddingBottom="8dp"/>
 
         <RelativeLayout
